@@ -1,15 +1,15 @@
 package main
 
 import (
-	// "github.com/AndrewVos/o"
 	"testing"
 )
 
 func TestCalculatesDistance(t *testing.T) {
-	words := []string{
-		"hello", "there", "good", "sirs",
-	}
-	l := NewLevenshteinDistance(words)
+	l := NewLevenshteinDistance()
+	l.AddWord("hello")
+	l.AddWord("there")
+	l.AddWord("good")
+	l.AddWord("sirs")
 
 	result := l.FindCloseWords("hell", 3)
 	if len(result) != 2 {

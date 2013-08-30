@@ -4,12 +4,13 @@ type LevenshteinDistance struct {
 	Trie *TrieNode
 }
 
-func NewLevenshteinDistance(words []string) *LevenshteinDistance {
+func NewLevenshteinDistance() *LevenshteinDistance {
 	t := NewTrieNode()
-	for _, w := range words {
-		t.Insert(w)
-	}
 	return &LevenshteinDistance{Trie: t}
+}
+
+func (l *LevenshteinDistance) AddWord(word string) {
+	l.Trie.Insert(word)
 }
 
 type LevenshteinWordMatch struct {
@@ -17,29 +18,7 @@ type LevenshteinWordMatch struct {
 	Distance int
 }
 
-type TrieNode struct {
-	Word     string
-	Children map[byte]*TrieNode
-}
-
-func NewTrieNode() *TrieNode {
-	n := &TrieNode{
-		Children: map[byte]*TrieNode{},
-	}
-	return n
-}
-
-func (n *TrieNode) Insert(word string) {
-	current := n
-	bytes := []byte(word)
-	for _, b := range bytes {
-		if _, ok := current.Children[b]; !ok {
-			current.Children[b] = NewTrieNode()
-		}
-		current = current.Children[b]
-	}
-	current.Word = word
-}
+var results []LevenshteinWordMatch
 
 func minInt(mins ...int) int {
 	smallest := mins[0]
@@ -86,9 +65,8 @@ func (l *LevenshteinDistance) recurse(node *TrieNode, letter byte, word string, 
 	}
 }
 
-var results []LevenshteinWordMatch
-
 func (l *LevenshteinDistance) FindCloseWords(word string, maximumDistance int) []LevenshteinWordMatch {
+	results = []LevenshteinWordMatch{}
 	currentRow := []int{}
 	for i := 0; i <= len(word); i++ {
 		currentRow = append(currentRow, i)
